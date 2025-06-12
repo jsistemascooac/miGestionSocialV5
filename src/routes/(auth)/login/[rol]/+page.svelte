@@ -1,8 +1,7 @@
 <script lang="ts">
-	import LoginForm from "$lib/components/login-form.svelte";
-    import type { LoginAsociadoSchema } from "$lib/schema";
-    import type { Infer, SuperValidated } from "sveltekit-superforms";
-	
+	import LoginFormAsociado from "$lib/components/auth/login-form-asociado.svelte";
+  import LoginForm from "$lib/components/auth/login-form.svelte";
+  
  let { data } = $props();
 </script>
 
@@ -14,6 +13,12 @@
       </div>
      
     </a>
-     <LoginForm data={data}/> 
+    
+    {#if data.rol=='asociado'}
+        <LoginFormAsociado data={data.form}/> 
+    {:else}
+        <LoginForm data={data.form}/> 
+    {/if}
+     
   </div>
 </div>

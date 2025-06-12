@@ -8,11 +8,10 @@ import type { ClientResponseError } from 'pocketbase';
 
 export const load = (async ({params}) => {
     
-	//console.log("Server:", request)
+	//console.log("Server:", params.rol)
     return {
         form: await superValidate(zod(loginAsociadoSchema)),
-		/*funcionalidad :params.funcionalidad,
-		*/
+		rol: params.rol
     };
 
 }) satisfies PageServerLoad;
@@ -31,18 +30,12 @@ export const actions = {
 		 const usuario = form.data.usuario
 		 const email = form.data.email
 		// const funcionalidad = form.data.funcionalidad
-	//	console.log("Form Login:",form);
-		 //console.log("funcionalidad",funcionalidad)
 		
 		if (!form.valid ) return fail(400, { form });
 
-	//	console.log(form);
-		// TODO: Create user
-
-		//return message(form, 'Form posted successfully!');
-	//	return message(form, 'Exitosa actualización del Familiar');
-		//return message(form, { message: 'an error occurred'} );
-		//console.log("Parmeters:",event.url);
+	
+		event.url.searchParams.get('rol')
+		console.log("Parmeters:",event.url.searchParams.get('rol'));
  
  		try {
 			const res = await fetch(`https://srv7.financialsoftware.com.co/ApisCooaceded/FN_SEGURIDAD/FN_seguridad/Login_Consulta`,{
@@ -75,12 +68,9 @@ export const actions = {
 
  
 				}else{
-				//	console.log("Pasa X Aqui")
-				//	return  { form, success: true, data: 'Result data' }
-				//	return message(form, 'Exitosa actualización del Familiar');
-				//	return error(400,{error:{ field:'email', message:'Check your email address.'}})
+				
 					return fail(400, {form, message: "Incorrecto la cedula o el email"})
-					//return message(form, { 404, message: 'an error occurred' });
+				
 				}
 			
 			
@@ -93,7 +83,7 @@ export const actions = {
 			return message(form, { status, message: 'an error occurred' });
 		} 
 
-		redirect(303, '/');
+		redirect(303, '/asociado/dashboard');
 
 	}
 }

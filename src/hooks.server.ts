@@ -7,10 +7,7 @@ import { env } from '$env/dynamic/public';
 export async function handle({ event, resolve }) {
 
     const {locals,request,url} = event
-    //const cookieTheme = event.cookies.get('theme');
-  //  console.log("theme 222",cookieTheme)	
    
-    
 		
 
 
@@ -19,31 +16,20 @@ export async function handle({ event, resolve }) {
 
     // load the store data from the request cookie string
     locals.pb.authStore.loadFromCookie(request.headers.get('cookie') || '');
-   // console.log("token PBXYZ",locals.user,locals.tokeFinancial)	
+    //console.log("token PBXYZ",locals.user,locals.tokeFinancial,locals.pb)	
     try {
         // get an up-to-date auth store state by verifying and refreshing the loaded auth model (if any)
         locals.pb.authStore.isValid && await locals.pb.collection('users').authRefresh();
         locals.user = locals.pb.authStore.model
        
-/* 
-        const res = await fetch(`https://srv7.financialsoftware.com.co/ApisCooaceded/FN_SEGURIDAD/FN_seguridad/Login_Consulta`,{
-            method:'POST',
-            headers:{
-                      'Content-Type':'application/json',
-                     },
-                     body:JSON.stringify({
-                        "Usuario": env.PUBLIC_FINANCIAL_USUARIO,
-                            "Clave": env.PUBLIC_FINANCIAL_CLAVE,
-                            "Ip": env.PUBLIC_FINANCIAL_IP,
-                        "cedula_Persona": cookieTheme,
-                        })
-                    });
 
-            const responseData =await res.json();	*/
-            
             locals.tokeFinancial =  event.cookies.get('tokeFinancial');
             locals.estadoFinancial =  event.cookies.get('estadoFinancial');
             //event.cookies.delete("tokeFinancial", { path: "/" });
+             const cookieTheme = event.cookies.get('tokeFinancial');
+            //console.log("theme 2221",cookieTheme,event.cookies.get('pb_auth'))	
+   
+    
         
             if(locals.tokeFinancial){
               
@@ -56,26 +42,11 @@ export async function handle({ event, resolve }) {
                     }
                 
                    // global.EventSource = eventsource;
-                    
+                   // console.log("theme 2221",event.locals.pb)
                     const response = await resolve(event);
                 
                     response.headers.set('set-cookie', event.locals.pb.authStore.exportToCookie({ secure: false }));
-                  /*   const resLoginPB = await fetch(`http://10.100.1.2:3090/api/collections/users/auth-with-password`,{
-                        method:'POST',
-                        headers:{
-                                'Content-Type':'application/json',
-                                },
-                                body:JSON.stringify({
-                                    "identity": env.PUBLIC_PB_GESTIONSOCIAL_IDENTITY,
-                                    "password": env.PUBLIC_PB_GESTIONSOCIAL_PASSWORD,
-                                    
-                                    })
-                                });
-
-                        const response =await resLoginPB.json();	
-                //     console.log("token PBXYZ",response.token)	
-                        locals.tokePBGestionSocial=response.token 
-                //     console.log("token PB",locals.tokePBGestionSocial)	 */
+                
             }   
     } catch (err) {
         console.error('Failed to refresh auth token', err);
@@ -84,14 +55,14 @@ export async function handle({ event, resolve }) {
         locals.user = undefined
     }
    
-    if(
+     if(
         url.pathname.startsWith('/') && 
         !locals.user && !locals.tokeFinancial &&
-        !['/login','/asociado/solicitudes/login','/asociado/detalles/login','/register'].includes(url.pathname)
+        !['/','/login/asociado','/login','/register'].includes(url.pathname)
         ){
-            redirect(303,'/asociado/solicitudes/login')
+            redirect(303,'/login/asociado')
         }
-
+ 
     const response = await resolve(event);
 
     // send back the default 'pb_auth' cookie to the client with the latest store state
