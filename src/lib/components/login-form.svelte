@@ -1,37 +1,71 @@
 <script lang="ts">
+	import { zodClient } from "sveltekit-superforms/adapters";
+    import { enhance } from "$app/forms";
 	import { Button } from "$lib/components/ui/button/index.js";
 	import * as Card from "$lib/components/ui/card/index.js";
 	import { Input } from "$lib/components/ui/input/index.js";
-	import { Label } from "$lib/components/ui/label/index.js";
+  	import * as Form from "$lib/components/ui/form/index.js";
+	import { superForm } from "sveltekit-superforms";
   	import { cn } from "$lib/utils.js";
   	import type { HTMLAttributes } from "svelte/elements";
+    import { loginSchema } from "$lib/schema";
+
+	export let data;
   	let { class: className, ...restProps }: HTMLAttributes<HTMLDivElement> = $props();
   	const id = $props.id();
+
+	const { form, errors, message, enhance } = superForm(data.form,{
+        validators:zodClient(loginSchema)
+    })
+
+   /*  const {form: formData, enhance, delayed} = form */
+
+
+    function superForm(form: any, arg1: { validators: any; }) {
+        throw new Error("Function not implemented.");
+    }
 </script>
 
 
 <div class={cn("flex flex-col gap-6", className)} {...restProps}>
   <Card.Root>
     <Card.Header class="text-center">
-      <Card.Title class="text-xl">Bienvenidos al Sistema de Gestion Social COOACEDED</Card.Title>
+      <Card.Title class="text-xl">Bienvenidos al Sistema de Gestion Social</Card.Title>
       <Card.Description>Ingresa con tu Identificaciòn y su email</Card.Description>
     </Card.Header>
     <Card.Content>
-      <form>
+      <form method="POST" use:enhance>
         <div class="grid gap-6">
           
           <div class="grid gap-6">
-			<div class="grid gap-3">
+			<Form.Field {form} name="email">
+				<Form.Control let:attrs>
+					<Form.Label>Email</Form.Label>
+					<Input {...attrs} bind:value={$formData.email} />
+				</Form.Control>
+				
+				<Form.FieldErrors />
+				</Form.Field>
+			<Form.Field {form} name="password">
+				<Form.Control let:attrs>
+					<Form.Label>Password</Form.Label>
+					<Input {...attrs} type="password" bind:value={$formData.password} />
+				</Form.Control>
+				
+				<Form.FieldErrors />
+			</Form.Field>
+			 <Form.Button class="w-full"
+			>{#if $delayed}
+				<Loader2 class="size-6 animate-spin " />
+			{:else}
+				Login
+			{/if}</Form.Button>
+		<!-- 	<div class="grid gap-3">
               <div class="flex items-center">
                 <Label for="identificacion-{id}">Identificacion</Label>
-               <!--  <a
-                  href="##"
-                  class="ml-auto text-sm underline-offset-4 hover:underline"
-                >
-                  Forgot your password?
-                </a> -->
+              
               </div>
-              <Input id="identificacion-{id}" type="text" required />
+              <Input id="identificacion-{id}" type="text" required {form} name="email"/>
             </div>
             <div class="grid gap-3">
               <Label for="email-{id}">Email</Label>
@@ -42,8 +76,8 @@
                 required
               />
             </div>
-        
-            <Button type="submit" class="w-full">Login</Button>
+         -->
+           <!--  <Button type="submit" class="w-full">Login</Button> -->
           </div>
          <!--  <div class="text-center text-sm">
             Don&apos;t have an account?

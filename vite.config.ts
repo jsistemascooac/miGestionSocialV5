@@ -6,5 +6,5 @@ export default defineConfig({
 	server: {
 			allowedHosts: ['gestionsocial.cooaceded.coop','devgestionsocial.cooaceded.coop'],
 		  },
-	plugins: [ sveltekit()]
+	plugins: [, sveltekit()]
 });
