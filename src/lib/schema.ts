@@ -13,7 +13,7 @@ export const loginAsociadoSchema = z.object({
 	.string()
     .min(1, { message: "Este campo debe ser llenado." })
     .email("Esto no es un email."),
-	 funcionalidad: z.string().optional(),
+//	 funcionalidad: z.string().optional(),
 	 //emailExpinn:z.string().optional(),
 /*	auxilio: z.string().optional()  */
 })/*.refine((data) => data.email === data.emailExpinn, {
@@ -241,7 +241,7 @@ export const chapterAccessSchema = z.object({
 	isFree: z.boolean()
 });
 export type LoginSchema = z.infer<typeof loginSchema>;
-export type LoginAsociadoSchema = z.infer<typeof loginAsociadoSchema>;
+export type LoginAsociadoSchema = typeof loginAsociadoSchema;
 export type CourseSchema = z.infer<typeof courseSchema>;
 
 export type WorkflowsSchema = z.infer<typeof workflowsSchema>;

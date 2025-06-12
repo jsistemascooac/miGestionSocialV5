@@ -1,33 +1,31 @@
 <script lang="ts">
 	import { zodClient } from "sveltekit-superforms/adapters";
-    import { enhance } from "$app/forms";
-	import { Button } from "$lib/components/ui/button/index.js";
 	import * as Card from "$lib/components/ui/card/index.js";
 	import { Input } from "$lib/components/ui/input/index.js";
   	import * as Form from "$lib/components/ui/form/index.js";
-	import { superForm } from "sveltekit-superforms";
+	import SuperDebug, { type SuperValidated,type Infer,superForm } from "sveltekit-superforms";
   	import { cn } from "$lib/utils.js";
   	import type { HTMLAttributes } from "svelte/elements";
-    import { loginSchema } from "$lib/schema";
+    import {   loginAsociadoSchema, type LoginAsociadoSchema } from "$lib/schema";
+import { Loader2 } from '@lucide/svelte';
+	
+  	let { data }: { data: { form: SuperValidated<Infer<LoginAsociadoSchema>> }}= $props();
 
-	export let data;
-  	let { class: className, ...restProps }: HTMLAttributes<HTMLDivElement> = $props();
-  	const id = $props.id();
-
-	const { form, errors, message, enhance } = superForm(data.form,{
-        validators:zodClient(loginSchema)
+  //	const id = $props.id();
+    //let { data } = $props();
+    
+	const  form = superForm(data.form,{
+        validators:zodClient(loginAsociadoSchema)
     })
 
-   /*  const {form: formData, enhance, delayed} = form */
+     const {form: formData, enhance, delayed} = form 
 
 
-    function superForm(form: any, arg1: { validators: any; }) {
-        throw new Error("Function not implemented.");
-    }
+
 </script>
 
-
-<div class={cn("flex flex-col gap-6", className)} {...restProps}>
+<SuperDebug data={$formData} />
+<div >
   <Card.Root>
     <Card.Header class="text-center">
       <Card.Title class="text-xl">Bienvenidos al Sistema de Gestion Social</Card.Title>
@@ -39,17 +37,17 @@
           
           <div class="grid gap-6">
 			<Form.Field {form} name="email">
-				<Form.Control let:attrs>
+				<Form.Control>
 					<Form.Label>Email</Form.Label>
-					<Input {...attrs} bind:value={$formData.email} />
+					<Input bind:value={$formData.email} />
 				</Form.Control>
 				
 				<Form.FieldErrors />
 				</Form.Field>
-			<Form.Field {form} name="password">
-				<Form.Control let:attrs>
+			<Form.Field  {form} name="usuario">
+				<Form.Control>
 					<Form.Label>Password</Form.Label>
-					<Input {...attrs} type="password" bind:value={$formData.password} />
+					<Input type="text" bind:value={$formData.usuario} />
 				</Form.Control>
 				
 				<Form.FieldErrors />

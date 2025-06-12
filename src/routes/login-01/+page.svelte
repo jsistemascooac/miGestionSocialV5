@@ -1,6 +1,9 @@
 <script lang="ts">
 	import LoginForm from "$lib/components/login-form.svelte";
-	/* import GalleryVerticalEndIcon from "@lucide/svelte/icons/gallery-vertical-end"; */
+    import type { LoginAsociadoSchema } from "$lib/schema";
+    import type { Infer, SuperValidated } from "sveltekit-superforms";
+	
+ let { data }: {data: { form: SuperValidated<Infer<LoginAsociadoSchema>> }} = $props();
 </script>
 
 <div class="bg-muted flex min-h-svh flex-col items-center justify-center gap-6 p-6 md:p-10">
@@ -9,12 +12,12 @@
       <div
        
       >
-       <!--  <GalleryVerticalEndIcon class="size-4" /> -->
+      
 		
 			  <img class="w-40 mx-auto mb-5" alt="The project logo" src= '/LOGO.png' />
       </div>
      
     </a>
-     <LoginForm /> 
+     <LoginForm data={data}/> 
   </div>
 </div>
